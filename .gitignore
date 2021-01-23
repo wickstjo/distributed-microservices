@@ -1,0 +1,11 @@
+# NODEJS STUFF
+node_modules
+package-lock.json
+
+# NOTEBOOK CHECKPOINTS
+.ipynb_checkpoints
+
+# TEMP DIRECTORIES
+*/build
+*/dist
+*/release

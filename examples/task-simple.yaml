@@ -1,0 +1,11 @@
+# ID OF PERFORMING ORACLE
+oracle: f0e9bbeca031fe28af1f228dca9eafe73847bca6a6ad32207309acec2441df7e
+
+# TOKEN REWARD & TIMELIMIT IN BLOCKS FOR TASK
+reward: 5
+timelimit: 10
+
+# TASK PARAMETERS
+params:
+    fiz: buz
+    another: parameter

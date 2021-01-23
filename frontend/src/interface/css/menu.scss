@@ -1,0 +1,21 @@
+#menu {
+    display: flex;
+    background: rgba(0, 0, 0, 0.185);
+    border-bottom: 1px solid rgba(2, 2, 2, 0.103);
+
+    li {
+        background-color: rgba(0, 0, 0, 0);
+        display: inline-block;
+        padding: 10px 12px;
+        color: #CECECE;
+        cursor: pointer;
+        text-shadow: 1px 1px #242424;
+        transition-property: background-color, color;
+        transition-duration: 0.3s, 0.3s;
+    }
+
+    li:hover {
+        background-color: rgba(2, 2, 2, 0.151);
+        color: rgb(174, 248, 166);
+    }
+}

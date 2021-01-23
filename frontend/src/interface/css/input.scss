@@ -1,0 +1,26 @@
+#field {
+    
+    input {
+        border: 0px solid white;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.281);
+        font: inherit;
+        padding: 8px 11px;
+        width: 100%;
+        color: white;
+        outline: none;
+        text-shadow: 1px 1px #292929;
+        transition: background 0.2s;
+    }
+    
+    input::placeholder {
+        color: white;
+    }
+    
+    .bad-input, .good-input {
+        background: rgba(216, 127, 127, 0.534);
+    }
+    
+    .good-input {
+        background-color: rgba(120, 156, 106, 0.74);
+    }
+}
