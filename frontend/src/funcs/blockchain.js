@@ -24,12 +24,14 @@ async function init(state) {
                 'user',
                 'oracle',
                 'task',
-                'token'
+                'token',
+                'service'
             ], web3),
             interfaces: interfaces([
                 'user',
                 'oracle',
-                'task'
+                'task',
+                'service'
             ])
         },
         keys: keys,

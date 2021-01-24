@@ -1,0 +1,9 @@
+# SERVICE NAME & BASE TOKEN FEE
+name: cool-service
+fee: 1
+
+# SERVICE REPOSITORY & PARAM STRUCTURE
+repository: https://github.com/wickstjo/distributed-microservices
+parameters:
+    foo: bar
+    second: param

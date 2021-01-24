@@ -7,12 +7,17 @@ contract Oracle {
     // ADDRESS REFERENCES
     address public owner;
     address public task_manager;
+    address public oracle_manager;
 
-    // SERVICE TOKEN PRICE
-    uint public price;
-
-    // ITERABLE ASSIGNMENT BACKLOG
+    // SERVICES & TASK BACKLOG
+    Reference[] public services;
     address[] public backlog;
+
+    // SERVICE REFERENCE
+    struct Reference {
+        address service;
+        uint fee;
+    }
 
     // DEVICE STATUS
     bool public active;
@@ -28,11 +33,16 @@ contract Oracle {
     event middleware();
     event modification();
 
-    // SET ADDRESS REFERENCES
-    constructor(uint _price, address _owner, address _task_manager) {
-        price = _price;
+    // WHEN CREATED, SET ADDRESS REFERENCES
+    constructor(address _owner, address _task_manager, address _oracle_manager) {
         owner = _owner;
         task_manager = _task_manager;
+        oracle_manager = _oracle_manager;
+    }
+
+    // FETCH TASK BACKLOG
+    function fetch_services() public view returns(Reference[] memory) {
+        return services;
     }
 
     // FETCH TASK BACKLOG
@@ -119,6 +129,52 @@ contract Oracle {
                 // EMIT CONTRACT MODIFIED EVENT
                 emit modification();
             }
+        }
+    }
+
+    // CHECK IF ORACLE HAS A SPECIFIC SERVICE
+    function find_service(address service) public view returns(int) {
+
+        // LOOP THROUGH SERVICES
+        for (uint index = 0; index < services.length; index++) {
+            if (services[index].service == service) {
+
+                // EXISTS
+                return int(index);
+            }
+        }
+
+        // DOES NOT EXIST
+        return -1;
+    }
+
+    // ADD SERVICE TO ORACLE
+    function add_service(address service, uint fee) public {
+
+        // IF SENDER IS THE ORACLE MANAGER
+        require(msg.sender == oracle_manager, 'permission denied');
+
+        // ADD TO AVAILABLE SERVICES
+        services.push(
+            Reference({
+                service: service,
+                fee: fee
+            })
+        );
+    }
+
+    // REMOVE SERVICE FROM ORACLE
+    function remove_oracle(address service) public {
+
+        // IF SENDER IS THE ORACLE MANAGER
+        require(msg.sender == owner, 'permission denied');
+
+        // FIND THE SERVICE INDEX
+        int index = find_service(service);
+
+        // IF THE SERVICE EXISTS, REMOVE IT
+        if (index != -1) {
+            delete services[uint(index)];
         }
     }
 }

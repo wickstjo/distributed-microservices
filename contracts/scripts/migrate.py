@@ -25,7 +25,7 @@ middleware = root + '/middleware/resources/'
 # In[45]:
 
 
-frontend = root + '/app/src/resources/'
+frontend = root + '/frontend/src/resources/'
 
 
 # In[53]:
@@ -71,7 +71,7 @@ for file in files:
     
     # CREATE NEW HEADER & EXTRACT JSON CONTENT
     header = file[0:-5].lower()
-    content = load_json(path + file)
+    content = load_json(interfaces + file)
     
     # NETWORK LIST
     network_list = list(content['networks'].keys())

@@ -5,6 +5,9 @@ import '../interface/css/prompt.scss';
 import ImportTask from './prompt/import-task';
 import InspectTask from './prompt/inspect-task';
 
+import ImportService from './prompt/import-service';
+import InspectService from './prompt/inspect-service';
+
 import ImportOracle from './prompt/import-oracle';
 import InspectOracle from './prompt/inspect-oracle';
 
@@ -69,6 +72,11 @@ function Content({ type }) {
             return <ImportTask />
         }
 
+        // IMPORT SERVICE
+        case 'import-service': {
+            return <ImportService />
+        }
+
         // IMPORT ORACLE
         case 'import-oracle': {
             return <ImportOracle />
@@ -77,6 +85,11 @@ function Content({ type }) {
         // INSPECT TASK
         case 'inspect-task': {
             return <InspectTask />
+        }
+
+        // INSPECT SERVICE
+        case 'inspect-service': {
+            return <InspectService />
         }
 
         // INSPECT ORACLE

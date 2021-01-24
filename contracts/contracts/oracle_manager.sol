@@ -4,17 +4,19 @@ pragma experimental ABIEncoderV2;
 
 import { Oracle } from './oracle.sol';
 import { UserManager } from './user_manager.sol';
+import { ServiceManager } from './service_manager.sol';
 
 contract OracleManager {
 
     // MAP OF ALL ORACLES, [ORACLE ID => CONTRACT]
-    mapping (string => Oracle) oracles;
+    mapping (string => Oracle) public oracles;
 
     // USER DEVICE COLLECTIONS, [USER ADDRESS => LIST OF ORACLE IDs]
-    mapping (address => string[]) collections;
+    mapping (address => string[]) public collections;
 
     // REFERENCES
     UserManager public user_manager;
+    ServiceManager public service_manager;
     address public task_manager;
 
     // INIT STATUS
@@ -34,7 +36,7 @@ contract OracleManager {
     }
 
     // CREATE NEW ORACLE
-    function create(string memory id, uint price) public {
+    function create(string memory id) public {
 
         // IF THE CONTRACT HAS BEEN INITIALIZED
         // IF THE USER IS REGISTERED
@@ -45,9 +47,9 @@ contract OracleManager {
 
         // INSTATIATE & INDEX NEW ORACLE
         oracles[id] = new Oracle(
-            price,
             msg.sender,
-            task_manager
+            task_manager,
+            address(this)
         );
 
         // PUSH INTO SENDERS COLLECTION
@@ -57,14 +59,32 @@ contract OracleManager {
         emit added();
     }
 
+    // ADD A SERVICE TO AN ORACLE
+    function add_service(address _service, string memory _oracle, uint _fee) public {
+
+        // IF THE SERVICE EXISTS
+        require(service_manager.exists(_service), 'service does not exist');
+
+        // SHORTCUT TO ORACLE
+        Oracle oracle = fetch_oracle(_oracle);
+
+        // IF THE SENDER IS THE ORACLE OWNER
+        require(oracle.owner() == msg.sender, 'you are not the oracles owner');
+        require(oracle.find_service(_service) == -1, 'service already exists');
+
+        // ADD THE SERVICE
+        oracle.add_service(_service, _fee);
+    }
+
     // INITIALIZE THE CONTRACT
-    function init(address _user_manager, address _task_manager) public {
+    function init(address _user_manager, address _service_manager, address _task_manager) public {
 
         // IF THE CONTRACT HAS NOT BEEN INITIALIZED BEFORE
         require(!initialized, 'contract has already been initialized');
 
         // SET REFERENCES
         user_manager = UserManager(_user_manager);
+        service_manager = ServiceManager(_service_manager);
         task_manager = _task_manager;
 
         // BLOCK RE-INITIALIZATION

@@ -63,11 +63,11 @@ contract TaskManager {
         require(oracle_manager.fetch_oracle(_oracle).active(), 'the oracle is not active');
 
         // EXTRACT THE ORACLES OWNER & SERVICE PRICE
-        uint oracle_price = oracle_manager.fetch_oracle(_oracle).price();
+        //uint oracle_price = oracle_manager.fetch_oracle(_oracle).price();
         address oracle_owner = oracle_manager.fetch_oracle(_oracle).owner();
 
         // MAKE SURE THE PROVIDED REWARD IS SUFFICIENT
-        require(_reward >= oracle_price, 'the reward must be higher or equal to the oracles service cost');
+        //require(_reward >= oracle_price, 'the reward must be higher or equal to the oracles service cost');
 
         // IF THE SENDER & ORACLE OWNER ARE THE SAME, 
         if (msg.sender == oracle_owner) {

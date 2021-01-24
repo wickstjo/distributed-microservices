@@ -17,6 +17,10 @@ export default() => {
                         link={ '/' }
                     />
                     <MenuItem
+                        header={ 'Services' }
+                        link={ '/services' }
+                    />
+                    <MenuItem
                         header={ 'Oracles' }
                         link={ '/oracles' }
                     />

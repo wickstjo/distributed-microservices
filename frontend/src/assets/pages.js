@@ -6,6 +6,9 @@ import '../interface/css/innerbody.scss';
 import Tasks from '../pages/tasks';
 import Task from '../pages/task';
 
+import Services from '../pages/services';
+import Service from '../pages/service';
+
 import Oracles from '../pages/oracles';
 import Oracle from '../pages/oracle';
 
@@ -30,6 +33,9 @@ export default () => {
 
                 <Route exact path={ '/tasks' } component={ Tasks } />
                 <Route path={ '/tasks/:address' } component={ Task } />
+
+                <Route exact path={ '/services' } component={ Services } />
+                <Route path={ '/services/:address' } component={ Service } />
 
                 <Route exact path={ '/oracles' } component={ Oracles } />
                 <Route path={ '/oracles/:hash' } component={ Oracle } />
