@@ -29,7 +29,7 @@ export default () => {
 
                     // INIT VALUE
                     initialized: await read({
-                        contract: 'oracle',
+                        contract: 'service',
                         func: 'initialized'
                     }, state),
 

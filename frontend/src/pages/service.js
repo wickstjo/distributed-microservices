@@ -11,7 +11,7 @@ import Actions from '../components/actions';
 export default ({ match }) => {
 
     // GLOBAL STATE
-    const { state } = useContext(Context)
+    const { state, dispatch } = useContext(Context)
 
     // LOCAL STATE
     const [local, set_local] = useReducer(reducer, {
@@ -102,7 +102,15 @@ export default ({ match }) => {
             />
             <Actions
                 options={{
-                    'assign to device': () => {},
+                    'assign to device': () => {
+                        dispatch({
+                            type: 'show-prompt',
+                            payload: 'assign-service',
+                            params: {
+                                service: match.params.address
+                            }
+                        })
+                    },
                     'query available devices': () => {}
                 }}
             />

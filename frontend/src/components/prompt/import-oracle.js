@@ -38,17 +38,11 @@ export default () => {
                 const result = await write({
                     contract: 'oracle',
                     func: 'create',
-                    args: [hash, yaml.data.service_cost]
+                    args: [hash]
                 }, state)
 
                 // EVERYTHING WENT FINE
                 if (result.success) {
-
-                    // REDIRECT TO THE ORACLE PAGE
-                    dispatch({
-                        type: 'redirect',
-                        payload: '/oracles/' + hash
-                    })
 
                     // CREATE TOAST MESSAGE
                     dispatch({

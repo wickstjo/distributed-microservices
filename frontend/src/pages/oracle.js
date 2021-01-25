@@ -21,9 +21,9 @@ export default ({ match }) => {
         owner: '',
         active: false,
         discoverable: false,
-        price: 0,
         completed: 0,
         config: {},
+        services: [],
         backlog: [],
     })
 
@@ -67,13 +67,6 @@ export default ({ match }) => {
                         func: 'discoverable'
                     }, state),
 
-                    // SERVICE PRICE
-                    price: await read({
-                        contract: 'oracle',
-                        address: oracle_address,
-                        func: 'price'
-                    }, state),
-
                     // TASK COMPLETED
                     completed: await read({
                         contract: 'oracle',
@@ -88,7 +81,14 @@ export default ({ match }) => {
                         func: 'config'
                     }, state),
 
-                    // ORACLE BACKLOG
+                    // TASK BACKLOG
+                    services: await read({
+                        contract: 'oracle',
+                        address: oracle_address,
+                        func: 'fetch_services'
+                    }, state),
+
+                    // TASK BACKLOG
                     backlog: await read({
                         contract: 'oracle',
                         address: oracle_address,
@@ -225,9 +225,14 @@ export default ({ match }) => {
                     'Owner': <Link to={ '/users/' + local.owner }>{ local.owner }</Link>,
                     'Active Status': local.active ? 'True' : 'False',
                     'Discoverable Status': local.discoverable ? 'True' : 'False',
-                    'Service Price': local.price,
                     'Tasks Completed': local.completed
                 }}
+            />
+            <List
+                header={ 'available services' }
+                data={ local.services }
+                fallback={ 'No services found.' }
+                category={ '/services' }
             />
             <Info
                 header={ 'discovery configuration' }

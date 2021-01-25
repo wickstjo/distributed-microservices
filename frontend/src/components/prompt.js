@@ -16,6 +16,7 @@ import PurchaseTokens from './prompt/purchase-tokens';
 import ModifyConfig from './prompt/modify-config';
 import DiscoverOracle from './prompt/discover-oracle';
 import ViewResult from './prompt/view-result';
+import AssignService from './prompt/assign-service';
 
 export default ({ set_wrapper }) => {
    
@@ -117,9 +118,14 @@ function Content({ type }) {
             return <DiscoverOracle />
         }
         
-        // PURCHASE TOKENS
+        // VIEW TASK RESULT
         case 'view-result': {
             return <ViewResult />
+        }
+
+        // ASSIGN SERVICE TO ORACLE
+        case 'assign-service': {
+            return <AssignService />
         }
 
         // FALLBACK

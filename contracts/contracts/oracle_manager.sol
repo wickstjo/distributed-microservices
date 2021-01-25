@@ -60,7 +60,11 @@ contract OracleManager {
     }
 
     // ADD A SERVICE TO AN ORACLE
-    function add_service(address _service, string memory _oracle, uint _fee) public {
+    function add_service(
+        address _service,
+        string memory _oracle,
+        uint _fee
+    ) public {
 
         // IF THE SERVICE EXISTS
         require(service_manager.exists(_service), 'service does not exist');
@@ -70,14 +74,18 @@ contract OracleManager {
 
         // IF THE SENDER IS THE ORACLE OWNER
         require(oracle.owner() == msg.sender, 'you are not the oracles owner');
-        require(oracle.find_service(_service) == -1, 'service already exists');
+        require(oracle.find_service(_service) == -1, 'oracle already offers this service');
 
         // ADD THE SERVICE
         oracle.add_service(_service, _fee);
     }
 
     // INITIALIZE THE CONTRACT
-    function init(address _user_manager, address _service_manager, address _task_manager) public {
+    function init(
+        address _user_manager,
+        address _service_manager,
+        address _task_manager
+    ) public {
 
         // IF THE CONTRACT HAS NOT BEEN INITIALIZED BEFORE
         require(!initialized, 'contract has already been initialized');

@@ -3,6 +3,7 @@ pragma solidity ^0.7.0;
 
 // IMPORT INTERFACE
 import { Service } from './service.sol';
+import { UserManager } from './user_manager.sol';
 
 contract ServiceManager {
 
@@ -11,6 +12,10 @@ contract ServiceManager {
 
     // ITERABLE LIST OF SERVICES
     address[] public listed;
+
+    // INIT STATUS & MANAGER REFERENCES
+    bool public initialized = false;
+    UserManager public user_manager;
 
     // SERVICE ADDED EVENT
     event added();
@@ -26,7 +31,17 @@ contract ServiceManager {
     }
 
     // CREATE NEW SERVICE
-    function create(string memory name, uint fee, string memory repository, string memory params) public {
+    function create(
+        string memory name,
+        uint fee,
+        string memory repository,
+        string memory params
+    ) public {
+
+        // IF CONTRACT HAS BEEN INITIALIZED
+        // IF THE USER IS REGISTERED
+        require(initialized, 'contracts have not been initialized');
+        require(user_manager.exists(msg.sender), 'you need to be registered');
 
         // INSTANTIATE NEW SERVICE
         Service service = new Service(
@@ -52,5 +67,18 @@ contract ServiceManager {
         } else {
             return false;
         }
+    }
+
+    // INITIALIZE THE CONTRACT
+    function init(address _user_manager) public {
+
+        // IF THE CONTRACT HAS NOT BEEN INITIALIZED
+        require(!initialized, 'contract has already been initialized');
+
+        // SET USER MANAGER REFERENCE
+        user_manager = UserManager(_user_manager);
+
+        // BLOCK FURTHER MODIFICATION
+        initialized = true;
     }
 }
