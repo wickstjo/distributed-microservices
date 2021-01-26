@@ -298,3 +298,6 @@
 20:27:14.934011 db@janitor F·5 G·1
 20:27:14.934040 db@janitor removing table-63
 20:27:14.934165 db@open done T·11.093686ms
+=============== Jan 26, 2021 (EET) ===============
+00:34:26.175240 db@close closing
+00:34:26.175276 db@close done T·35.938µs

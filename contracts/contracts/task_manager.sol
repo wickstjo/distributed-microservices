@@ -7,6 +7,7 @@ import { Task } from './task.sol';
 import { UserManager } from './user_manager.sol';
 import { OracleManager } from './oracle_manager.sol';
 import { TokenManager } from './token_manager.sol';
+import { ServiceManager } from './service_manager.sol';
 
 contract TaskManager {
 
@@ -31,6 +32,7 @@ contract TaskManager {
     UserManager public user_manager;
     OracleManager public oracle_manager;
     TokenManager public token_manager;
+    ServiceManager public service_manager;
 
     // MODIFICATION EVENT
     event modification();
@@ -48,6 +50,7 @@ contract TaskManager {
     // CREATE NEW TASK
     function create(
         string memory _oracle,
+        address _service,
         uint _reward,
         uint _timelimit,
         string memory _params
@@ -60,30 +63,49 @@ contract TaskManager {
         require(initialized, 'contracts have not been initialized');
         require(user_manager.exists(msg.sender), 'you need to be registered');
         require(oracle_manager.exists(_oracle), 'the oracle does not exist');
+        require(service_manager.exists(_service), 'the service does not exist');
         require(oracle_manager.fetch_oracle(_oracle).active(), 'the oracle is not active');
 
-        // EXTRACT THE ORACLES OWNER & SERVICE PRICE
-        //uint oracle_price = oracle_manager.fetch_oracle(_oracle).price();
+        // CHECK IF THE ORACLE HAS THE SERVICE
+        int service_index = oracle_manager.fetch_oracle(_oracle).find_service(_service);
+
+        // IF THE SERVICE IS LISTED
+        require(service_index != -1, 'the oracle does not offer this service');
+
+        // FETCH DIFFERENT SERVICE FEE
+        uint oracle_fee = oracle_manager.fetch_oracle(_oracle).fetch_service_fee(_service);
+        uint service_fee = service_manager.fetch_service(_service).fee();
+
+        // FETCH THE ORACLE OWNERS ADDRESS
         address oracle_owner = oracle_manager.fetch_oracle(_oracle).owner();
 
         // MAKE SURE THE PROVIDED REWARD IS SUFFICIENT
-        //require(_reward >= oracle_price, 'the reward must be higher or equal to the oracles service cost');
+        require(_reward >= oracle_fee, 'the reward must be higher or equal to the oracles service fee');
 
-        // IF THE SENDER & ORACLE OWNER ARE THE SAME, 
+        // IF THE SENDER & ORACLE OWNER ARE THE SAME
         if (msg.sender == oracle_owner) {
-            uint total = _reward + fee + (_reward / 2);
-            require(token_manager.balance(oracle_owner) >= total, 'you have insufficient tokens');
+
+            // CUMULATIVE FEE
+            uint total = _reward + (_reward / 2) + service_fee + fee;
+
+            // CHECK IF TOKEN BALANCE IS SUFFICIENT
+            require(token_manager.balance(msg.sender) >= total, 'you have insufficient tokens');
         
         // OTHERWISE, CHECK THE BALANCE OF BOTH PARTICIPANTS
         } else {
+
+            // SENDER BALANCE - TASK REWARD, TASK FEE
             require(token_manager.balance(msg.sender) >= _reward + fee, 'you have insufficient tokens');
-            require(token_manager.balance(oracle_owner) >= _reward / 2, 'oracle owner has insufficient tokens');
+
+            // ORACLE BALANCE - TASK STAKE + SERVICE FEE
+            require(token_manager.balance(oracle_owner) >= (_reward / 2) + service_fee, 'oracle owner has insufficient tokens');
         }
 
         // INSTANTIATE NEW TASK
         Task task = new Task(
             msg.sender,
             _oracle,
+            _service,
             _timelimit,
             _reward + _reward / 2,
             _params
@@ -101,7 +123,7 @@ contract TaskManager {
 
         // SEIZE TOKENS FROM BOTH PARTIES
         token_manager.transfer(_reward, msg.sender, address(this));
-        token_manager.transfer(_reward / 2, oracle_owner, address(this));
+        token_manager.transfer((_reward / 2) + service_fee, oracle_owner, address(this));
 
         // EMIT CONTRACT MODIFIED EVENT
         emit modification();
@@ -135,6 +157,16 @@ contract TaskManager {
             task.reward(),
             address(this),
             oracle_owner
+        );
+
+        // SERVICE ADDRESS
+        address service = task.service();
+
+        // PAY FEE TO THE SERVICE AUTHOR
+        token_manager.transfer(
+            service_manager.fetch_service(service).fee(),
+            address(this),
+            service_manager.fetch_service(service).author()
         );
 
         // AWARD BOTH PARTIES WITH REPUTATION
@@ -172,6 +204,17 @@ contract TaskManager {
             task.creator()
         );
 
+        // TASK DETAILS
+        address service = task.service();
+        string memory oracle = task.oracle();
+
+        // REFUND THE SERVICE FEE
+        token_manager.transfer(
+            service_manager.fetch_service(service).fee(),
+            address(this),
+            oracle_manager.fetch_oracle(oracle).owner()
+        );
+
         // REMOVE TASK FROM PENDING
         clear_task(task.creator(), _task);
 
@@ -190,7 +233,8 @@ contract TaskManager {
         uint _fee,
         address _user_manager,
         address _oracle_manager,
-        address _token_manager
+        address _token_manager,
+        address _service_manager
     ) public {
 
         // IF THE CONTRACT HAS NOT BEEN INITIALIZED
@@ -203,6 +247,7 @@ contract TaskManager {
         user_manager = UserManager(_user_manager);
         oracle_manager = OracleManager(_oracle_manager);
         token_manager = TokenManager(_token_manager);
+        service_manager = ServiceManager(_service_manager);
 
         // BLOCK FURTHER MODIFICATION
         initialized = true;

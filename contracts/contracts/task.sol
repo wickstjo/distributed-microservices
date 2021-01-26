@@ -7,10 +7,12 @@ contract Task {
     address public creator;
     address public task_manager;
     string public oracle;
+    address public service;
 
     // TASK DETAILS
     uint256 public expires;
     uint public reward;
+    uint public service_fee;
 
     // EXECUTION PARAMS
     string public params;
@@ -19,12 +21,20 @@ contract Task {
     event destroyed();
 
     // WHEN CREATED..
-    constructor(address _creator, string memory _oracle, uint _timelimit, uint _reward, string memory _params) {
+    constructor(
+        address _creator,
+        string memory _oracle,
+        address _service,
+        uint _timelimit,
+        uint _reward,
+        string memory _params
+    ) {
 
         // SET REFERENCES
         creator = _creator;
         task_manager = msg.sender;
         oracle = _oracle;
+        service = _service;
 
         // SET TASK DETAILS
         expires = block.number + _timelimit;

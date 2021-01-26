@@ -9,15 +9,12 @@ contract Oracle {
     address public task_manager;
     address public oracle_manager;
 
-    // SERVICES & TASK BACKLOG
-    Reference[] public services;
-    address[] public backlog;
+    // OFFERED SERVICES & THEIR FEES
+    address[] public services;
+    mapping (address => uint) public fees;
 
-    // SERVICE REFERENCE
-    struct Reference {
-        address service;
-        uint fee;
-    }
+    // TASK BACKLOG
+    address[] public backlog;
 
     // DEVICE STATUS
     bool public active;
@@ -40,9 +37,14 @@ contract Oracle {
         oracle_manager = _oracle_manager;
     }
 
-    // FETCH TASK BACKLOG
-    function fetch_services() public view returns(Reference[] memory) {
+    // FETCH OFFERED SERVICES
+    function fetch_services() public view returns(address[] memory) {
         return services;
+    }
+
+    // FETCH SERVICE FEE
+    function fetch_service_fee(address service) public view returns(uint) {
+        return fees[service];
     }
 
     // FETCH TASK BACKLOG
@@ -137,7 +139,7 @@ contract Oracle {
 
         // LOOP THROUGH SERVICES
         for (uint index = 0; index < services.length; index++) {
-            if (services[index].service == service) {
+            if (services[index] == service) {
 
                 // EXISTS
                 return int(index);
@@ -155,12 +157,10 @@ contract Oracle {
         require(msg.sender == oracle_manager, 'permission denied');
 
         // ADD TO AVAILABLE SERVICES
-        services.push(
-            Reference({
-                service: service,
-                fee: fee
-            })
-        );
+        services.push(service);
+
+        // SAVE SERVICE FEE
+        fees[service] = fee;
     }
 
     // REMOVE SERVICE FROM ORACLE
