@@ -38,6 +38,31 @@ export default ({ match }) => {
                 args: [match.params.hash]
             }, state)
 
+            // TEMP CONTAINER
+            const container = []
+
+            // FETCH SERVICES
+            const services = await read({
+                contract: 'oracle',
+                address: oracle_address,
+                func: 'fetch_services'
+            }, state)
+
+            // LOOP THROUGH SERVICES
+            services.forEach(async(service) => {
+                
+                // FETCH THE SERVICE FEE
+                const price = await read({
+                    contract: 'oracle',
+                    address: oracle_address,
+                    func: 'fetch_service_fee',
+                    args: [service]
+                }, state)
+
+                // PUSH TO CONTAINER
+                container.push([service, price + ' tokens'])
+            })
+
             // FETCH DATA & SET IN STATE
             set_local({
                 type: 'all',
@@ -81,12 +106,8 @@ export default ({ match }) => {
                         func: 'config'
                     }, state),
 
-                    // TASK BACKLOG
-                    services: await read({
-                        contract: 'oracle',
-                        address: oracle_address,
-                        func: 'fetch_services'
-                    }, state),
+                    // SET SERVICES & THEIR PRICES
+                    services: container,
 
                     // TASK BACKLOG
                     backlog: await read({

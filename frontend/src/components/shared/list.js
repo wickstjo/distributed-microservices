@@ -49,9 +49,36 @@ function Row({ value, category, callback }) {
 
         // BASIC LINK
         default: { return (
+            <Content
+                value={ value }
+                category={ category }
+            />
+        )}
+    }
+}
+
+// ROW CONTENT
+function Content({ value, category }) {
+    switch (typeof(value)) {
+
+        // ARRAY
+        case 'object': { return (
+            <Link to={ category + '/' + value[0] }>
+                <div id={ 'row' }>
+                    <div className={ 'split' }>
+                        <div>{ value[0] }</div>
+                        <div>{ value[1] }</div>
+                    </div>
+                </div>
+            </Link>
+        )}
+
+        // BASELINE FALLBACK
+        default: { return (
             <Link to={ category + '/' + value }>
                 <div id={ 'row' }>{ value }</div>
             </Link>
         )}
     }
 }
+

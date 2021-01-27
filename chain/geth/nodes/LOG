@@ -301,3 +301,15 @@
 =============== Jan 26, 2021 (EET) ===============
 00:34:26.175240 db@close closing
 00:34:26.175276 db@close done T·35.938µs
+=============== Jan 27, 2021 (EET) ===============
+17:00:40.748940 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+17:00:40.749870 version@stat F·[1 1] S·335B[159B 176B] Sc·[0.25 0.00]
+17:00:40.749885 db@open opening
+17:00:40.749923 journal@recovery F·1
+17:00:40.751438 journal@recovery recovering @68
+17:00:40.754932 memdb@flush created L0@70 N·1 S·159B "loc..seq,v44":"loc..seq,v44"
+17:00:40.755488 version@stat F·[2 1] S·494B[318B 176B] Sc·[0.50 0.00]
+17:00:40.762036 db@janitor F·5 G·0
+17:00:40.762049 db@open done T·12.158508ms
+21:43:44.148532 db@close closing
+21:43:44.148561 db@close done T·28.603µs

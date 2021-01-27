@@ -7,12 +7,11 @@ contract Task {
     address public creator;
     address public task_manager;
     string public oracle;
-    address public service;
 
     // TASK DETAILS
+    address public service;
     uint256 public expires;
     uint public reward;
-    uint public service_fee;
 
     // EXECUTION PARAMS
     string public params;

@@ -135,8 +135,10 @@ contract TaskManager {
         // IF THE TASK EXISTS
         require(exists(_task), 'task does not exist');
 
-        // EXTRACT TASK & ORACLE INFO
+        // LOCATE TASK
         Task task = fetch_task(_task);
+
+        // ORACLE INFO
         string memory oracle = task.oracle();
         address oracle_owner = oracle_manager.fetch_oracle(oracle).owner();
 
