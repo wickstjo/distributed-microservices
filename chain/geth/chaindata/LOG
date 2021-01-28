@@ -417,3 +417,15 @@
 17:00:40.713696 db@open done T·60.062172ms
 21:43:44.148403 db@close closing
 21:43:44.148479 db@close done T·75.869µs
+=============== Jan 28, 2021 (EET) ===============
+16:21:19.539544 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+16:21:19.542219 version@stat F·[2 16] S·34MiB[725KiB 33MiB] Sc·[0.50 0.33]
+16:21:19.542290 db@open opening
+16:21:19.542563 journal@recovery F·1
+16:21:19.553098 journal@recovery recovering @127
+16:21:19.605422 memdb@flush created L0@129 N·13885 S·770KiB "\x00\x83\xa4..|\x16\xd6,v935042":"\xff\xe3|..\u007f\r\xf4,v935039"
+16:21:19.607251 version@stat F·[3 16] S·34MiB[1MiB 33MiB] Sc·[0.75 0.33]
+16:21:19.619103 db@janitor F·21 G·0
+16:21:19.619146 db@open done T·76.837022ms
+20:41:47.443602 db@close closing
+20:41:47.443954 db@close done T·352.353µs

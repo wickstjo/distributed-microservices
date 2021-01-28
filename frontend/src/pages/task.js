@@ -17,7 +17,10 @@ export default ({ match }) => {
     const [local, set_local] = useReducer(reducer, {
         creator: '',
         oracle: '',
+        service: '',
         reward: '',
+        stake: '',
+        fee: '',
         expires: ''
     })
 
@@ -37,25 +40,46 @@ export default ({ match }) => {
                         func: 'creator'
                     }, state),
 
-                    // ACTIVE STATUS
+                    // ASSIGNED ORACLE
                     oracle: await read({
                         contract: 'task',
                         address: match.params.address,
                         func: 'oracle'
                     }, state),
 
-                    // DISCOVERABLE STATUS
+                    // SERVICE
+                    service: await read({
+                        contract: 'task',
+                        address: match.params.address,
+                        func: 'service'
+                    }, state),
+
+                    // EXPIRATION BLOCK
+                    expires: await read({
+                        contract: 'task',
+                        address: match.params.address,
+                        func: 'expires'
+                    }, state),
+
+                    // TASK REWARD
                     reward: await read({
                         contract: 'task',
                         address: match.params.address,
                         func: 'reward'
                     }, state),
 
-                    // TASK COMPLETED
-                    expires: await read({
+                    // ORACLE STAKE
+                    stake: await read({
                         contract: 'task',
                         address: match.params.address,
-                        func: 'expires'
+                        func: 'stake'
+                    }, state),
+
+                    // SERVICE FEE
+                    fee: await read({
+                        contract: 'task',
+                        address: match.params.address,
+                        func: 'fee'
                     }, state),
                 }
             })
@@ -127,8 +151,16 @@ export default ({ match }) => {
                     'Contract': match.params.address,
                     'Creator': <Link to={ '/users/' + local.creator }>{ local.creator }</Link>,
                     'Assigned Oracle': <Link to={ '/oracles/' + local.oracle }>{ local.oracle }</Link>,
-                    'Token Reward': local.reward,
+                    'Service': <Link to={ '/services/' + local.service }>{ local.service }</Link>,
                     'Block Expiration': local.expires
+                }}
+            />
+            <Info
+                header={ 'Token Parameters' }
+                data={{
+                    'Task Reward': local.reward,
+                    'Oracle Stake': local.stake,
+                    'Service Fee': local.fee
                 }}
             />
             <Actions

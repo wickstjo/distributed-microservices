@@ -32,7 +32,7 @@ export default () => {
             if (yaml.success) {
 
                 // DECONSTRUCT TASK PARAMS
-                const { oracle, reward, timelimit, params } = yaml.data
+                const { oracle, service, reward, timelimit, params } = yaml.data
 
                 // ENCODE THE TASK PARAMS TO BASE64
                 const morphed = encode(params)
@@ -43,6 +43,7 @@ export default () => {
                     func: 'create',
                     args: [
                         oracle,
+                        service,
                         reward,
                         timelimit,
                         morphed,

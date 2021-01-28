@@ -107,7 +107,9 @@ contract TaskManager {
             _oracle,
             _service,
             _timelimit,
-            _reward + _reward / 2,
+            _reward,
+            _reward / 2,
+            service_fee,
             _params
         );
 
@@ -156,19 +158,16 @@ contract TaskManager {
 
         // RELEASE SEIZED TOKEN REWARD
         token_manager.transfer(
-            task.reward(),
+            task.reward() + task.stake(),
             address(this),
             oracle_owner
         );
 
-        // SERVICE ADDRESS
-        address service = task.service();
-
         // PAY FEE TO THE SERVICE AUTHOR
         token_manager.transfer(
-            service_manager.fetch_service(service).fee(),
+            task.fee(),
             address(this),
-            service_manager.fetch_service(service).author()
+            service_manager.fetch_service(task.service()).author()
         );
 
         // AWARD BOTH PARTIES WITH REPUTATION
@@ -201,20 +200,16 @@ contract TaskManager {
 
         // RELEASED SEIZED TOKENS TO THE TASK CREATOR
         token_manager.transfer(
-            task.reward(),
+            task.reward() + task.stake(),
             address(this),
             task.creator()
         );
 
-        // TASK DETAILS
-        address service = task.service();
-        string memory oracle = task.oracle();
-
         // REFUND THE SERVICE FEE
         token_manager.transfer(
-            service_manager.fetch_service(service).fee(),
+            task.fee(),
             address(this),
-            oracle_manager.fetch_oracle(oracle).owner()
+            oracle_manager.fetch_oracle(task.oracle()).owner()
         );
 
         // REMOVE TASK FROM PENDING

@@ -11,7 +11,11 @@ contract Task {
     // TASK DETAILS
     address public service;
     uint256 public expires;
+
+    // TOKEN FEES
     uint public reward;
+    uint public stake;
+    uint public fee;
 
     // EXECUTION PARAMS
     string public params;
@@ -26,6 +30,8 @@ contract Task {
         address _service,
         uint _timelimit,
         uint _reward,
+        uint _stake,
+        uint _fee,
         string memory _params
     ) {
 
@@ -37,8 +43,12 @@ contract Task {
 
         // SET TASK DETAILS
         expires = block.number + _timelimit;
-        reward = _reward;
         params = _params;
+
+        // SET TOKEN RELATED PARAMS
+        reward = _reward;
+        stake = _stake;
+        fee = _fee;
     }
 
     // SELF DESTRUCT

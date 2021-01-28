@@ -1,6 +1,9 @@
 pragma solidity ^0.7.0;
 // SPDX-License-Identifier: MIT
 
+// IMPORT INTERFACE
+import { UserManager } from './user_manager.sol';
+
 contract TokenManager {
 
     // MAP OF TOKEN OWNERSHIP, [USER ADDRESS => AMOUNT]
@@ -15,6 +18,7 @@ contract TokenManager {
     // INIT STATUS & TASK MANAGER REFERENCE
     bool public initialized = false;
     address public task_manager;
+    UserManager public user_manager;
 
     // VALUE CHANGE EVENT
     event changes(
@@ -31,9 +35,11 @@ contract TokenManager {
     function purchase(uint amount) public payable {
 
         // IF THE CONTRACT HAS BEEN INITIALIZED
+        // IF THE SENDER IS REGISTERED
         // IF THE SENDER HAS SUFFICIENT FUNDS
         // IF THE CAPACITY HAS NOT BEEN MET
         require(initialized, 'contract has not been initialized');
+        require(user_manager.exists(msg.sender), 'you need to be registered');
         require(msg.value == amount * price, 'insufficient funds provided');
         require(amount + sold <= capacity, 'the capacity has been met');
 
@@ -99,7 +105,8 @@ contract TokenManager {
         string memory _symbol,
         uint _price,
         uint _capacity,
-        address _task_manager
+        address _task_manager,
+        address _user_manager
     ) public {
 
         // IF THE CONTRACT HAS NOT BEEN INITIALIZED BEFORE
@@ -110,8 +117,9 @@ contract TokenManager {
         price = _price;
         capacity = _capacity;
 
-        // SET ORACLE MANAGER REFERENCE
+        // SET REFERENCES
         task_manager = _task_manager;
+        user_manager = UserManager(_user_manager);
 
         // BLOCK FURTHER MODIFICATIONS
         initialized = true;
