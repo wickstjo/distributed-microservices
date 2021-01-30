@@ -9,3 +9,9 @@ package-lock.json
 */build
 */dist
 */release
+
+# PYTHON CACHE
+*__pycache__
+
+# BLOCKCHAIN DB
+chain

@@ -161,6 +161,9 @@ contract Oracle {
 
         // SAVE SERVICE FEE
         fees[service] = fee;
+
+        // EMIT CONTRACT MODIFIED EVENT
+        emit modification();
     }
 
     // REMOVE SERVICE FROM ORACLE
